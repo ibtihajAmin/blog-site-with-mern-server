@@ -4,11 +4,13 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("./models/User");
 const app = express();
+const jwt = require("jsonwebtoken");
 const port = 4000;
 
 const salt = bcrypt.genSaltSync(10);
+const secret = "lowejskvnkgwrjgwqwff4fdfd5y63";
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 
 mongoose.connect(
@@ -35,7 +37,13 @@ app.get("/login", (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userDoc = await User.findOne({ username: username });
-  res.json(userDoc);
+  const passOk = bcrypt.compareSync(password, userDoc.password);
+  if (passOk) {
+    jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
+      if (err) throw err;
+      res.cookie("token", token).json("ok");
+    });
+  }
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
@@ -43,4 +51,3 @@ app.listen(port, () => {
 
 //mongodb+srv://ibtihajamin18:Px0ZoswfBXMcPWH6@cluster0.fnc9ngh.mongodb.net/?retryWrites=true&w=majority
 //mongodb+srv://ibtihajamin18:<password>@cluster0.fnc9ngh.mongodb.net/?retryWrites=true&w=majority
-//Px0ZoswfBXMcPWH6  (Password-DB)
