@@ -84,6 +84,10 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   res.json(postDoc);
 });
 
+app.get("/post", async (req, res) => {
+  res.json(await Post.find());
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
