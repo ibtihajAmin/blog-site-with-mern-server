@@ -15,14 +15,14 @@ const port = 4000;
 const salt = bcrypt.genSaltSync(10);
 const secret = "lowejskvnkgwrjgwqwff4fdfd5y63";
 
+require("dotenv").config();
+
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(
-  "mongodb+srv://ibtihajamin18:Px0ZoswfBXMcPWH6@cluster0.fnc9ngh.mongodb.net/?retryWrites=true&w=majority"
-);
+mongoose.connect(process.env.MONGODB_URL);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
