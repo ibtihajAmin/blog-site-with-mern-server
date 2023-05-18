@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(process.env.MONGODB_URL);
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
